@@ -26,9 +26,16 @@ class ProcessManager:
                 pass  # Ignoramos los procesos que no se pueden acceder
         return self.processes
 
-    def display_processes(self):
-        """Muestra información extendida de los procesos activos."""
+    def add_process(self, process):
+        """Agrega un proceso a la lista de procesos activos."""
+        self.processes.append(process)
+
+    def randomize_processes(self):
+        """Simula la creación de procesos con información aleatoria."""
         for proc in self.processes:
-            print(f"PID: {proc.pid} | Name: {proc.name} | CPU: {proc.cpu}% | "
-                  f"Memory: {proc.memory}% | User: {proc.user} | Status: {proc.status} | "
-                  f"Start Time: {datetime.fromtimestamp(proc.start_time).strftime('%Y-%m-%d %H:%M:%S')}")
+            proc.randomize()
+
+    def display_processes(self):
+        """Muestra información extendida de los procesos."""
+        for proc in self.processes:
+            proc.display_info()
