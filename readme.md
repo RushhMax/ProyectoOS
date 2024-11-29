@@ -1,6 +1,4 @@
-Here’s the improved README in Markdown format:
 
-```markdown
 # **Process Management Project**
 
 Welcome to the **Process Management Project**! This tool provides a detailed overview of the processes running on your system. With this project, you can analyze and monitor active processes, including their CPU usage, memory consumption, start time, and status, in a user-friendly manner.
@@ -165,6 +163,3 @@ Want to contribute to the project? Here’s how you can help:
 This project is open-source and available under the MIT License. Feel free to use, modify, and distribute it.
 
 ---
-```
-
-This Markdown version is structured for maximum clarity and friendliness for users or contributors.
