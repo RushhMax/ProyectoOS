@@ -1,3 +1,5 @@
+from app.process import Process
+
 def fcfs(processes, cpus):
     """First Come First Serve: Asigna procesos a CPUs por orden."""
     cpu_count = len(cpus)
