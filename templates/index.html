@@ -36,6 +36,9 @@
                 <th>User</th>
                 <th>Status</th>
                 <th>Start Time</th>
+                <th>Arrival Time</th>
+                <th>Service Time</th>
+                <th>Priority</th>
             </tr>
         </thead>
         <tbody>
@@ -48,6 +51,9 @@
                 <td>{{ process.user }}</td>
                 <td>{{ process.status }}</td>
                 <td>{{ process.start_time }}</td>
+                <th>{{ process.arrival_time }}</th>
+                <th>{{ process.service_time }}</th>
+                <th>{{ process.priority }}</th>
             </tr>
             {% endfor %}
         </tbody>

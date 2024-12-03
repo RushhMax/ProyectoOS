@@ -19,6 +19,8 @@ def processes():
     manager.randomize_processes()
     manager.display_processes()
 
+    fcfs(processes)
+
     return render_template('index.html',processes=processes)
 
 @app.route('/AddProcess', methods=['POST'])

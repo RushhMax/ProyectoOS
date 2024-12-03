@@ -15,11 +15,15 @@ class Process:
 
     def display_info(self):
         print(f'PID: {self.pid}, Name: {self.name}, CPU: {self.cpu}, Memory: {self.memory}, User: {self.user}, Status: {self.status}, Start Time: {self.start_time}, Arrival Time: {self.arrival_time}, Service Time: {self.service_time}, Priority: {self.priority}')
+    
+    def display_important_info(self):
+        print(f'PID: {self.pid}, Name: {self.name}, Status: {self.status}, Arrival Time: {self.arrival_time}, Service Time: {self.service_time}, Priority: {self.priority}')
 
     def randomize(self):
         self.status = 'stopped'
-        self.arrival_time = random.randint(0, 100)
-        self.priority = random.randint(0, 100)
+        self.arrival_time = random.randint(0, 15)
+        self.priority = random.randint(0, 10)
+        self.service_time = random.randint(0, 20)
 
     @classmethod
     def from_proc_info(cls, proc_info):

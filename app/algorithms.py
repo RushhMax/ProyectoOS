@@ -1,14 +1,19 @@
 from app.process import Process
 
-def fcfs(processes, cpus):
-    """First Come First Serve: Asigna procesos a CPUs por orden."""
-    cpu_count = len(cpus)
-    for i, process in enumerate(processes):
-        cpus[i % cpu_count].add_process(process)
+def sort_by_arrival_time(processes):
+    """Ordena los procesos por tiempo de llegada."""
+    return sorted(processes, key=lambda x: x.arrival_time)
 
-def round_robin(processes, cpus, quantum):
+def fcfs(processes):
+    """First Come First Serve: Simula FCFS."""
+    processes = sort_by_arrival_time(processes)  
+    print("Simulando FCFS")
+    print("Procesos: ", len(processes))
+    current_time = 0
+    for process in processes:
+        process.display_important_info()
+        current_time += process.service_time
+        print(f"Tiempo actual: {current_time}")
+
+def round_robin(processes, quantum):
     """Round Robin: Simula Round Robin con un quantum."""
-    cpu_count = len(cpus)
-    for i, process in enumerate(processes):
-        process['quantum'] = quantum  # Asigna quantum a cada proceso
-        cpus[i % cpu_count].add_process(process)

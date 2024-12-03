@@ -32,6 +32,27 @@ class ProcessManager:
         """Agrega un proceso a la lista de procesos activos."""
         self.processes.append(process)
 
+    def add_process_random(self):
+        """Agrega un proceso con información aleatoria a la lista de procesos activos."""
+        pid = len(self.processes) + 1 
+        name = f'Random Process {pid}'
+        cpu = round(100 * (pid % 10) / 10, 2)
+        memory = round(100 * (pid % 5) / 5, 2)
+        user = 'random'
+        status = 'running'
+        start_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        process = Process(pid=pid, name=name, cpu=cpu, memory=memory, user=user, status=status, start_time=start_time)
+        process.randomize()
+        self.processes.append(process)
+
+    def delete_process(self, pid):
+        """Elimina un proceso de la lista de procesos activos."""
+        for proc in self.processes:
+            if proc.pid == pid:
+                self.processes.remove(proc)
+                return True
+        return False
+
     def randomize_processes(self):
         """Simula la creación de procesos con información aleatoria."""
         for proc in self.processes:
