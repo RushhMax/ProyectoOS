@@ -6,7 +6,17 @@ class ProcessManager:
     def __init__(self):
         self.processes = []
 
+    def start(self):
+        """Inicializa el administrador de procesos."""
+        self.get_real_processes()
+        self.randomize_processes()
+        self.processes.sort(key=lambda x:(x.arrival_time, -x.priority))
+    
     def get_processes(self):
+        """Obtiene la lista de procesos."""
+        return self.processes
+
+    def get_real_processes(self):
         """Obtains a list of active system processes with extended information."""
         self.processes = []
         for proc in psutil.process_iter(['pid', 'name', 'cpu_percent', 'memory_percent', 'username', 'status', 'create_time']):
@@ -26,7 +36,7 @@ class ProcessManager:
                 self.processes.append(process)
             except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
                 pass  # Ignore processes that are inaccessible or no longer exist
-        return self.processes
+
 
     def add_process(self, process):
         """Agrega un proceso a la lista de procesos activos."""

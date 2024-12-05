@@ -1,0 +1,12 @@
+
+<h2>FCFS Simulation Results</h2>
+<table>
+  <tr><th>PID</th><th>Start Time</th><th>Completion Time</th></tr>
+  {% for process in results %}
+    <tr>
+      <td>{{ process['pid'] }}</td>
+      <td>{{ process['start_time'] }}</td>
+      <td>{{ process['completion_time'] }}</td>
+    </tr>
+  {% endfor %}
+</table>
