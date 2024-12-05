@@ -1,5 +1,6 @@
 from app.process_manager import ProcessManager
 from app.cpu import CPU
+from app.process import Process
 from app.algorithms import fcfs, round_robin, simulate_fcfs_logic
 from flask import Flask, render_template, request
 
@@ -20,19 +21,33 @@ def main():
 
     return render_template('index.html',processes=manager.get_processes())
 
-@app.route('/fcfs')
-def simulate_fcfs():
-    processes = [
-        {"pid": 1, "burst_time": 5},
-        {"pid": 2, "burst_time": 3},
-        {"pid": 3, "burst_time": 8},
-    ]
-    completion_times = simulate_fcfs_logic(processes)
-    return render_template('simulation_fcfs.html', results=completion_times)
-
-@app.route('/AddProcess', methods=['POST'])
+@app.route('/add_process', methods=['POST'])
 def add_process():
-    return render_template('add_process.html')
+    """Handle the request to add a new process."""
+    # Get data from the form
+    name = request.form.get('name')
+    arrival_time = int(request.form.get('arrival_time'))
+    priority = int(request.form.get('priority'))
+    service_time = int(request.form.get('service_time'))
+
+    # Create the new process
+    new_process = Process(pid=len(manager.get_processes()) + 1, name=name, arrival_time=arrival_time, service_time=service_time, priority=priority)
+    manager.add_process(new_process)
+
+    # Render the updated processes list and return it
+    return render_template('process-list.html', processes=manager.get_processes())
+
+@app.route('/delete_process', methods=['POST'])
+def delete_process():
+    """Handle the request to delete a process."""
+    # Get the process id to delete
+    pid = int(request.form.get('pid'))
+
+    # Delete the process
+    manager.delete_process(pid)
+
+    # Render the updated processes list and return it
+    return render_template('process-list.html', processes=manager.get_processes())
 
 # def main():
 #     # Inicializamos la gestión de procesos

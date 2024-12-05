@@ -1,0 +1,14 @@
+{% for process in processes %}
+<tr>
+    <td>{{ process.pid }}</td>
+    <td>{{ process.name }}</td>
+    <td>{{ process.cpu }}</td>
+    <td>{{ process.memory }}</td>
+    <td>{{ process.user }}</td>
+    <td>{{ process.status }}</td>
+    <td>{{ process.start_time }}</td>
+    <td>{{ process.arrival_time }}</td>
+    <td>{{ process.service_time }}</td>
+    <td>{{ process.priority }}</td>
+</tr>
+{% endfor %}
