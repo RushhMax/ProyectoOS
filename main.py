@@ -10,7 +10,6 @@ app = Flask(__name__)
 manager = ProcessManager()
 manager.start() 
 
-
 """
 ruta principal para visualizar procesos ------------------------------------------------------------------------------
 """
@@ -84,5 +83,40 @@ def simulate():
     # Mostrar resultados en la misma página
     return render_template('index.html', cpus=manager.cpus, completed_processes=manager.completed_processes)
 
+# @app.route('/simulate', methods=['POST'])
+# def simulate():
+#     """Handle the request to simulate the CPU."""
+#     # Get the selected algorithm
+#     algorithm = request.form.get('algorithm')
+
+#     # Simulate the CPU with the selected algorithm
+#     if algorithm == 'fcfs':
+#         simulate_fcfs_logic(manager)
+#     elif algorithm == 'round_robin':
+#         round_robin(manager)
+
+#     # Render the updated processes list and return it
+#     return render_template('process-list.html', processes=manager.get_processes())
+
+# def main():
+#     # Inicializamos la gestión de procesos
+#     manager = ProcessManager()
+#     processes = manager.get_processes()
+#
+#     # Mostramos los procesos activos
+#     print("Procesos activos:")
+#     manager.display_processes()
+#
+#     # Simulamos 4 CPUs
+#     cpus = [CPU(i) for i in range(4)]
+#
+#     # Seleccionamos algoritmo
+#     print("\nAsignando procesos con FCFS:")
+#     fcfs(processes, cpus)
+#
+#     # Ejecutamos los procesos en cada CPU
+#     for cpu in cpus:
+#         cpu.execute_processes()
+#
 if __name__ == "__main__":
     app.run(debug=True)
