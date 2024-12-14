@@ -15,6 +15,7 @@ class Process:
         self.wait_time = wait_time
         self.turnaround_time = turnaround_time
         self.response_time = response_time
+        self.remaining_time = service_time  # Nuevo atributo para tiempo restante
 
     @classmethod
     def from_proc_info(cls, proc_info):
@@ -33,18 +34,17 @@ class Process:
 
     def randomize(self, pid):
         self.pid = pid
-        self.status = 'stopped'
+        self.status = "stopped"
         self.arrival_time = random.randint(0, 15)
         self.priority = random.randint(0, 10)
         self.service_time = random.randint(1, 20)
+        self.remaining_time = self.service_time  # Reiniciar el tiempo restante al azar
 
     def display_info(self):
-        print(f'PID: {self.pid}, Name: {self.name}, CPU: {self.cpu}, Memory: {self.memory}, User: {self.user}, Status: {self.status}, Start Time: {self.start_time}, Arrival Time: {self.arrival_time}, Service Time: {self.service_time}, Priority: {self.priority}')
+        print(f'PID: {self.pid}, Name: {self.name}, CPU: {self.cpu}, Memory: {self.memory}, User: {self.user}, Status: {self.status}, Start Time: {self.start_time}, Arrival Time: {self.arrival_time}, Service Time: {self.service_time}, Priority: {self.priority}, Remaining Time: {self.remaining_time}')
     
     def display_important_info(self):
-        print(f'PID: {self.pid}, Name: {self.name}, Status: {self.status}, Arrival Time: {self.arrival_time}, Service Time: {self.service_time}, Priority: {self.priority}')
+        print(f'PID: {self.pid}, Name: {self.name}, Status: {self.status}, Arrival Time: {self.arrival_time}, Service Time: {self.service_time}, Priority: {self.priority}, Remaining Time: {self.remaining_time}')
 
     def display_times(self):
         print(f'PID: {self.pid}, Wait Time: {self.wait_time}, Turnaround Time: {self.turnaround_time}, Response Time: {self.response_time}')
-
-
