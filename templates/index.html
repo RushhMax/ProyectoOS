@@ -9,6 +9,20 @@
 </head>
 <body>
     <h1>Active Processes</h1>
+
+    <!-- Formulario de Simulación -->
+    <form method="POST" action="/simulate">
+        <label for="algorithm">Seleccionar Algoritmo:</label>
+        <select name="algorithm" id="algorithm">
+            <option value="fcfs">First Come First Serve (FCFS)</option>
+            <option value="round_robin">Round Robin</option>
+            <option value="sjf">Shortest Job First</option>
+        </select>
+        <button type="submit">Simular</button>
+    </form>
+
+
+    <!-- Botones de Gestión -->
     <button id="delete-process-btn">Delete Process</button>
     <div id="delete-process-form" style="display:none;">
         <form id="delete-form">
@@ -19,7 +33,6 @@
     </div>
 
     <button id="add-process-btn">Add Process</button>
-
     <div id="add-process-form" style="display:none;">
         <form id="process-form">
             <label for="name">Name:</label>
@@ -35,26 +48,65 @@
     </div>
 
 
-    <table>
-        <thead>
-            <tr>
-                <th>PID</th>
-                <th>Name</th>
-                <th>CPU (%)</th>
-                <th>Memory (%)</th>
-                <th>User</th>
-                <th>Status</th>
-                <th>Start Time</th>
-                <th>Arrival Time</th>
-                <th>Service Time</th>
-                <th>Priority</th>
-            </tr>
-        </thead>
+    <!-- Tablas de Procesos por CPU -->
+    <div id="cpu-container">
+        {% for cpu in cpus %}
+        <h2>CPU {{ cpu.cpu_id }}</h2>
+        <h3>Procesos en Ejecución</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>PID</th>
+                    <th>Nombre</th>
+                    <th>Tiempo de Llegada</th>
+                    <th>Tiempo Restante</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for process in cpu.queue %}
+                <tr>
+                    <td>{{ process.pid }}</td>
+                    <td>{{ process.name }}</td>
+                    <td>{{ process.arrival_time }}</td>
+                    <td>{{ process.remaining_time }}</td>
+                    <td>{{ process.status }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    
+        <h3>Procesos Completados</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>PID</th>
+                    <th>Nombre</th>
+                    <th>Tiempo de Llegada</th>
+                    <th>Tiempo de Servicio</th>
+                    <th>Tiempo de Espera</th>
+                    <th>Tiempo de Retorno</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for process in cpu.completed_processes %}
+                <tr>
+                    <td>{{ process.pid }}</td>
+                    <td>{{ process.name }}</td>
+                    <td>{{ process.arrival_time }}</td>
+                    <td>{{ process.service_time }}</td>
+                    <td>{{ process.waiting_time }}</td>
+                    <td>{{ process.turnaround_time }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endfor %}
+    </div>
+    
 
-        <tbody id="processes-list">
-            {% include 'process-list.html' %}
-        </tbody>
-    </table>
+
+
 
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
