@@ -22,7 +22,7 @@ def main():
     manager.display_processes()
 
     # Renderiza la plantilla HTML principal mostrando los procesos actuales.
-    return render_template('index.html', cpus=manager.cpus, completed_processes=manager.completed_processes)
+    return render_template('index.html', processes=manager.get_processes(), cpus=manager.cpus)
 
 
 """
@@ -49,7 +49,7 @@ def add_process():
     manager.add_process(new_process)    
 
     # Renderiza una lista actualizada de procesos.
-    return render_template('process-list.html', processes=manager.get_processes())
+    return render_template('process-list.html', processes=manager.get_processes(), cpus=manager.cpus)
 
 """
 ruta para eliminar proceso -------------------------------------------------------------------------------------------
@@ -64,7 +64,7 @@ def delete_process():
     manager.delete_process(pid)
 
     # Renderiza una lista actualizada de procesos.
-    return render_template('process-list.html', processes=manager.get_processes())
+    return render_template('process-list.html', processes=manager.get_processes(), cpus=manager.cpus)
 
 """
 ruta para simular la asignación de procesos --------------------------------------------------------------------------
@@ -76,12 +76,12 @@ def simulate():
 
     # Ejecutar procesos en cada CPU
     for cpu in manager.cpus:
-        cpu.execute_processes()
+        cpu.execute_processes(1)
 
     manager.track_completed_processes()
 
     # Mostrar resultados en la misma página
-    return render_template('index.html', cpus=manager.cpus, completed_processes=manager.completed_processes)
+    return render_template('index.html', processes=manager.get_processes(), cpus=manager.cpus, completed_processes=manager.completed_processes)
 
 # @app.route('/simulate', methods=['POST'])
 # def simulate():

@@ -1,0 +1,36 @@
+<div class="cpu-column">
+    <h3>CPU {{ cpu.cpu_id }}</h3>
+
+    {% for section, title in [("ready_processes", "Ready Processes"), 
+                              ("running_processes", "Running Processes"), 
+                              ("completed_processes", "Completed Processes"), 
+                              ("errored_processes", "Errored Processes")] %}
+    <div class="process-section">
+        <h4>{{ title }}</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>PID</th>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Arrival Time</th>
+                    <th>Service Time</th>
+                    <th>Priority</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for process in cpu[section] %}
+                <tr>
+                    <td>{{ process.pid }}</td>
+                    <td>{{ process.name }}</td>
+                    <td>{{ process.status }}</td>
+                    <td>{{ process.arrival_time }}</td>
+                    <td>{{ process.service_time }}</td>
+                    <td>{{ process.priority }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endfor %}
+</div>

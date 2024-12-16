@@ -48,7 +48,8 @@
     </div>
 
 
-    <!-- Tablas de Procesos por CPU -->
+
+    <!-- Tablas de Procesos por CPU
     <div id="cpu-container">
         {% for cpu in cpus %}
         <h2>CPU {{ cpu.cpu_id }}</h2>
@@ -103,11 +104,34 @@
         </table>
         {% endfor %}
     </div>
+     -->
+
+    <table>
+        <thead>
+            <tr>
+                <th>PID</th>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Arrival Time</th>
+                <th>Service Time</th>
+                <th>Priority</th>
+            </tr>
+        </thead>
+
+        <tbody id="processes-list">
+            {% include 'process-list.html' %}
+        </tbody>
+    </table>
+
+    <div id="cpus-container">
+        <h2>CPU Processes Overview</h2>
+        <div class="cpus-grid">
+            {% for cpu in cpus %}
+                {% include 'cpu-template.html' %}
+            {% endfor %}
+        </div>
+    </div>
     
-
-
-
-
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>

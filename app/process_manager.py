@@ -20,7 +20,7 @@ class ProcessManager:
         """Distribuye los procesos iniciales para equilibrar la carga entre los CPUs."""
         for process in self.processes:
             # Encuentra el CPU con la menor carga (suma de tiempos de servicio de los procesos en la cola)
-            least_loaded_cpu = min(self.cpus, key=lambda cpu: sum(p.service_time for p in cpu.queue))
+            least_loaded_cpu = min(self.cpus, key=lambda cpu: sum(p.service_time for p in cpu.ready_processes))
             least_loaded_cpu.add_process(process)
 
     
@@ -61,8 +61,8 @@ class ProcessManager:
         for proc in self.processes:
             if proc.pid == pid:
                 self.processes.remove(proc)
-                return True
-        return False
+        for cpu in self.cpus:
+            cpu.delete_process(pid)
 
     def assign_processes(self, algorithm):
         """Asigna procesos a las CPUs usando un algoritmo específico."""
