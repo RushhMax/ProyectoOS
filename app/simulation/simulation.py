@@ -1,3 +1,9 @@
+import psutil
+
+from app.core.CPU import CPU
+from app.core.Dispatcher import Dispatcher
+from app.core.Scheduler import Scheduler
+
 class Simulation:
     def __init__(self, num_cpus):
         self.cpus = [CPU() for _ in range(num_cpus)]
