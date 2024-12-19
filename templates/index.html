@@ -96,26 +96,29 @@
     </div>
     
 
-    <table>
-        <thead>
-            <tr>
-                <th>PID</th>
-                <th>Name</th>
-                <th>Status</th>
-                <th>Arrival Time</th>
-                <th>Service Time</th>
-                <th>Priority</th>
-                <th>Waiting Time</th>
-                <th>Turnaround Time</th>
-                <th>Response Time</th>
-            </tr>
-        </thead>
+    <!-- Tabla de Procesos Activos -->
+    <div class="scrollable-table-main">
+        <table class="table table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th>PID</th>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Arrival Time</th>
+                    <th>Service Time</th>
+                    <th>Priority</th>
+                    <th>Waiting Time</th>
+                    <th>Turnaround Time</th>
+                    <th>Response Time</th>
+                </tr>
+            </thead>
 
-        <tbody id="processes-list">
-            {% include 'process-list.html' %}
-        </tbody>
-    </table>
-
+            <tbody id="processes-list">
+                {% include 'process-list.html' %}
+            </tbody>
+        </table>
+    </div>
+    
     <h2 style="margin-top: 50px;">CPU Processes Overview</h2>
 
     <div class="d-flex justify-content-center align-items-center">

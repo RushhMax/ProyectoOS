@@ -14,9 +14,9 @@
 
     {% for section, title in [("process_queue", "Ready Processes"), 
                               ("summary", "Completed Processes")] %}
-    <div class="process-section">
+    <div class="process-section scrollable-table cpu-{{ cpu.cpu_id }}">
         <h4>{{ title }}</h4>
-        <table>
+        <table class="table"> 
             <thead>
                 <tr>
                     <th>PID</th>
