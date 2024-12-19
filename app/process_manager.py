@@ -39,7 +39,7 @@ class ProcessManager:
         return self.processes
     
     def get_next_pid(self):
-        return self.processes[-1].pid + 1 if self.processes else 0
+        return self.processes[-1].pid + 1 if self.processes else 1
 
     def get_real_processes(self):
         #Obtains a list of active system processes with extended information.
@@ -90,6 +90,22 @@ class ProcessManager:
             CPU(cpu_id=2, scheduler=SJF()),
             CPU(cpu_id=3, scheduler=Priority())
         ]"""
+
+    def set_algorithm(self, cpu_id, algorithm):
+        """Establecer un algoritmo de planificación para una CPU específica."""
+        if algorithm == "fcfs":
+            scheduler = FCFS()
+        elif algorithm == "round_robin":
+            scheduler = RoundRobin(quantum=4)
+        elif algorithm == "sjf":
+            scheduler = SJF()
+        elif algorithm == "priority":
+            scheduler = Priority()
+        else:
+            raise ValueError(f"Algoritmo {algorithm} no reconocido para la CPU {cpu_id}")
+
+        self.cpus[cpu_id].scheduler = scheduler
+        print(f"CPU {cpu_id}: {algorithm}")
 
     def assign_processes(self):
         """Asignar procesos a CPUs usando el planificador global."""

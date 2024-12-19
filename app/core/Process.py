@@ -15,6 +15,7 @@ class Process:
         self.waiting_time = 0
         self.turnaround_time = None
         self.response_time = None
+        self.end_time = None
         self.remaining_time = service_time  # Nuevo atributo para tiempo restante
 
     @classmethod
@@ -39,6 +40,7 @@ class Process:
         self.service_time = random.randint(1, 20)
         self.remaining_time = self.service_time  # Reiniciar el tiempo restante al azar
         self.start_time = 0
+        self.end_time = 0
 
     def display_info(self):
         print(f'PID: {self.pid}, Name: {self.name}, CPU: {self.cpu}, Memory: {self.memory}, User: {self.user}, Status: {self.status}, Start Time: {self.start_time}, Arrival Time: {self.arrival_time}, Service Time: {self.service_time}, Priority: {self.priority}, Remaining Time: {self.remaining_time}')

@@ -50,6 +50,7 @@ class FCFS:
         summary = []
         for proc in processes:
             summary.append({
+                "status": "COMPLETED",
                 "pid": proc.pid,
                 "name": proc.name,
                 "arrival_time": proc.arrival_time,

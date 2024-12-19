@@ -11,14 +11,11 @@ def main():
     # Mostramos los procesos activos
     print("Procesos activos con informacion inicial random")
 
-    #process_manager.generate_processes()
-
     # Imprime los procesos activos en la consola.
     manager.display_processes()
 
-
     # Renderiza la plantilla HTML principal mostrando los procesos actuales.
-    return render_template('index.html', processes=manager.get_processes())
+    return render_template('index.html', processes=manager.get_processes(), cpus=manager.cpus)
 
 # GET REAL PROCESSES
 @app.route('/get_real_processes', methods=['GET'])
@@ -28,7 +25,7 @@ def get_real_processes():
     manager.get_real_processes()
 
     # Renderiza la plantilla HTML principal mostrando los procesos actuales.
-    return render_template('process-list.html', processes=manager.get_processes())
+    return render_template('process-list.html', processes=manager.get_processes(), cpus=manager.cpus)
 
 @app.route('/get_simulated_processes', methods=['GET'])
 def get_simulated_processes():
@@ -37,7 +34,7 @@ def get_simulated_processes():
     manager.generate_processes(12)
 
     # Renderiza una lista actualizada de procesos.
-    return render_template('process-list.html', processes=manager.get_processes())
+    return render_template('process-list.html', processes=manager.get_processes(), cpus=manager.cpus)
 
 
 # ELEGIR CADA ALGORITMO DE PLANIFICACIÓN POR CPU
@@ -82,16 +79,18 @@ def delete_process():
 # SIMULAR
 @app.route('/assign_processes', methods=['GET'])
 def assign_processes():
-    """Handle the request to assign processes to CPUs."""
-    # Asignar procesos a las CPUs
-    manager.assign_processes()
+    """Handle the request to simulate the CPU."""
 
+    cpu_algorithms = ['fcfs', 'round_robin', 'sjf', 'priority']
+    
+    manager.setup_cpus(cpu_algorithms= cpu_algorithms)
+    manager.assign_processes()
     # Renderiza una lista actualizada de procesos.
     return render_template('index.html', processes=manager.get_processes(), cpus=manager.cpus)
 
 @app.route('/simulate', methods=['GET'])
 def simulate():
-    """Handle the request to simulate the CPU."""
+
     cpu_algorithms = [
         request.form.get("algorithm_cpu_1"),
         request.form.get("algorithm_cpu_2"),
@@ -100,9 +99,13 @@ def simulate():
     ]
 
     cpu_algorithms = ['fcfs', 'round_robin', 'sjf', 'priority']
-    
-    manager.setup_cpus(cpu_algorithms= cpu_algorithms)
-    manager.assign_processes()
+
+    manager.set_algorithm(0, cpu_algorithms[0])
+    manager.set_algorithm(1, cpu_algorithms[1])
+    manager.set_algorithm(2, cpu_algorithms[2])
+    manager.set_algorithm(3, cpu_algorithms[3])
+
+    manager.run_simulation()
 
     """
     # Asignar procesos y ejecutar la simulación
@@ -113,87 +116,5 @@ def simulate():
     # Renderiza una lista actualizada de procesos.
     return render_template('index.html', processes=manager.get_processes(), cpus=manager.cpus)
 
-# def main():
-#     # Crear instancia de ProcessManager
-#     process_manager = ProcessManager(num_processes=12)
-    
-#     # Ejecutar la simulación
-#     process_manager.simulate()
-
-#     # Agregar un nuevo proceso
-#     new_process = Process(
-#         pid=100,
-#         name="Process_100",
-#         arrival_time=5,
-#         service_time=10,
-#         priority=3,
-#         cpu=None,
-#         memory=1024,
-#         user="user",
-#         status="READY"
-#     )
-#     process_manager.add_process(new_process)
-
-#     # Reasignar procesos a las CPUs
-#     process_manager.assign_processes()
-
-#     # Eliminar un proceso por PID
-#     process_manager.delete_process(100)
-
 if __name__ == "__main__":
     app.run(debug=True)
-
-
-
-# ruta para simular la asignación de procesos --------------------------------------------------------------------------
-# """
-# @app.route('/simulate', methods=['POST'])
-# def simulate():
-#     algorithm = request.form.get('algorithm')
-#     manager.assign_processes(algorithm)
-
-#     # Ejecutar procesos en cada CPU
-#     for cpu in manager.cpus:
-#         cpu.execute_processes(1)
-
-#     manager.track_completed_processes()
-
-#     # Mostrar resultados en la misma página
-#     return render_template('index.html', processes=manager.get_processes(), cpus=manager.cpus, completed_processes=manager.completed_processes)
-
-# @app.route('/simulate', methods=['POST'])
-# def simulate():
-#     """Handle the request to simulate the CPU."""
-#     # Get the selected algorithm
-#     algorithm = request.form.get('algorithm')
-
-#     # Simulate the CPU with the selected algorithm
-#     if algorithm == 'fcfs':
-#         simulate_fcfs_logic(manager)
-#     elif algorithm == 'round_robin':
-#         round_robin(manager)
-
-#     # Render the updated processes list and return it
-#     return render_template('process-list.html', processes=manager.get_processes())
-
-# def main():
-#     # Inicializamos la gestión de procesos
-#     manager = ProcessManager()
-#     processes = manager.get_processes()
-#
-#     # Mostramos los procesos activos
-#     print("Procesos activos:")
-#     manager.display_processes()
-#
-#     # Simulamos 4 CPUs
-#     cpus = [CPU(i) for i in range(4)]
-#
-#     # Seleccionamos algoritmo
-#     print("\nAsignando procesos con FCFS:")
-#     fcfs(processes, cpus)
-#
-#     # Ejecutamos los procesos en cada CPU
-#     for cpu in cpus:
-#         cpu.execute_processes()
-#
-

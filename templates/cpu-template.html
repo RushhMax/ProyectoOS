@@ -13,7 +13,7 @@
     </div>
 
     {% for section, title in [("process_queue", "Ready Processes"), 
-                              ("summary", "Summary"), 
+                              ("summary", "Completed Processes")] %}
     <div class="process-section">
         <h4>{{ title }}</h4>
         <table>
@@ -24,7 +24,13 @@
                     <th>Status</th>
                     <th>Arrival Time</th>
                     <th>Service Time</th>
-                    <th>Priority</th>
+                    {% if section == "summary" %}
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Waiting Time</th>
+                        <th>Turnaround Time</th>
+                        <th>Response Time</th>
+                    {% endif %}
                 </tr>
             </thead>
             <tbody>
@@ -35,7 +41,13 @@
                     <td>{{ process.status }}</td>
                     <td>{{ process.arrival_time }}</td>
                     <td>{{ process.service_time }}</td>
-                    <td>{{ process.priority }}</td>
+                    {% if section == "summary" %}
+                        <td>{{ process.start_time }}</td>
+                        <td>{{ process.end_time }}</td>
+                        <td>{{ process.waiting_time }}</td>
+                        <td>{{ process.turnaround_time }}</td>
+                        <td>{{ process.response_time }}</td>
+                    {% endif %}
                 </tr>
                 {% endfor %}
             </tbody>
