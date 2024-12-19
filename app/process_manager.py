@@ -1,5 +1,115 @@
+import random
 import psutil
-from datetime import datetime
+
+from app.core.Process import Process
+from app.core.CPU import CPU
+from app.core.GlobalScheduler import GlobalScheduler
+from app.algorithms.FCFS import FCFS
+from app.algorithms.Priority import Priority
+from app.algorithms.RoundRobin import RoundRobin
+from app.algorithms.SJF import SJF
+
+class ProcessManager:
+    def __init__(self, num_processes=12):
+        self.num_processes = num_processes
+        self.processes = []
+        self.cpus = []
+        self.global_scheduler = None
+
+    def generate_processes(self):
+        """Generar procesos aleatorios."""
+        for i in range(self.num_processes):
+            process = Process(
+                pid=i,
+                name=f"Process_{i}",
+                arrival_time=random.randint(0, 15),
+                service_time=random.randint(1, 20),
+                priority=random.randint(1, 10),
+                cpu=0,
+                memory=random.randint(512, 4096),
+                user="user",
+                status="READY"
+            )
+            self.processes.append(process)
+
+    def get_real_processes(self):
+        #Obtains a list of active system processes with extended information.
+        self.processes = []
+        cont = 1
+        for proc in psutil.process_iter(['pid', 'name', 'cpu_percent', 'memory_percent', 'username', 'status', 'create_time']):
+            try:
+                # Process information
+                process_info = {
+                    'pid': cont,                 # Process ID
+                    'name': proc.info['name'],               # Process Name
+                    'cpu': proc.cpu_percent(interval=None),   # CPU usage percentage (needs an interval)
+                    'memory': proc.info['memory_percent'],   # Memory usage percentage
+                    'user': proc.info['username'],           # Username running the process
+                    'status': 'stopped'          # Process status (running, sleeping, etc.)
+                }
+                # Create a Process object
+                process = Process.from_proc_info(process_info)
+                self.processes.append(process)
+            except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+                pass  # Ignore processes that are inaccessible or no longer exist
+            cont += 1
+
+
+    def setup_cpus(self):
+        """Configurar CPUs con diferentes algoritmos de planificación."""
+        self.cpus = [
+            CPU(cpu_id=0, scheduler=FCFS()),
+            CPU(cpu_id=1, scheduler=RoundRobin(quantum=4)),
+            CPU(cpu_id=2, scheduler=SJF()),
+            CPU(cpu_id=3, scheduler=Priority())
+        ]
+
+    def assign_processes(self):
+        """Asignar procesos a CPUs usando el planificador global."""
+        self.global_scheduler = GlobalScheduler(self.cpus)
+        self.global_scheduler.assign_processes(self.processes)
+
+    def run_simulation(self):
+        """Ejecutar la simulación en cada CPU."""
+        print("---- Simulación de Procesos ----")
+        for cpu in self.cpus:
+            cpu.execute()
+
+    def display_processes(self):
+        """Mostrar los procesos generados."""
+        print("---- Procesos Generados ----")
+        for process in self.processes:
+            process.display_info()
+
+    def simulate(self):
+        """Método principal para ejecutar todo."""
+        self.generate_processes()
+        #self.get_real_processes()
+        self.display_processes()
+        self.setup_cpus()
+        self.assign_processes()
+        self.run_simulation()
+    
+    def add_process(self, process):
+        """Agregar un nuevo proceso al sistema."""
+        self.processes.append(process)
+        print(f"Proceso {process.name} agregado correctamente.")
+
+    def delete_process(self, pid):
+        """Eliminar un proceso del sistema por su PID."""
+        process_to_remove = next((proc for proc in self.processes if proc.pid == pid), None)
+        if process_to_remove:
+            self.processes.remove(process_to_remove)
+            print(f"Proceso con PID {pid} eliminado correctamente.")
+
+            # También eliminar de las colas de los CPUs
+            for cpu in self.cpus:
+                cpu.delete_process(pid)
+        else:
+            print(f"Proceso con PID {pid} no encontrado.")
+
+
+"""
 from app.process import Process
 from app.cpu import CPU
 from app.algorithms import fcfs, round_robin, sjf
@@ -11,13 +121,13 @@ class ProcessManager:
         self.completed_processes = []
 
     def start(self):
-        """Inicializa el administrador de procesos."""
+        #Inicializa el administrador de procesos.
         self.get_real_processes()
         self.processes.sort(key=lambda x:(x.arrival_time, -x.priority))
         self.distribute_processes()
 
     def distribute_processes(self):
-        """Distribuye los procesos iniciales para equilibrar la carga entre los CPUs."""
+        #istribuye los procesos iniciales para equilibrar la carga entre los CPUs.
         for process in self.processes:
             # Encuentra el CPU con la menor carga (suma de tiempos de servicio de los procesos en la cola)
             least_loaded_cpu = min(self.cpus, key=lambda cpu: sum(p.service_time for p in cpu.ready_processes))
@@ -25,11 +135,11 @@ class ProcessManager:
 
     
     def get_processes(self):
-        """Obtiene la lista de procesos."""
+        #Obtiene la lista de procesos.
         return self.processes
 
     def get_real_processes(self):
-        """Obtains a list of active system processes with extended information."""
+        #Obtains a list of active system processes with extended information.
         self.processes = []
         cont = 1
         for proc in psutil.process_iter(['pid', 'name', 'cpu_percent', 'memory_percent', 'username', 'status', 'create_time']):
@@ -51,21 +161,9 @@ class ProcessManager:
                 pass  # Ignore processes that are inaccessible or no longer exist
             cont += 1
 
-    def add_process(self, process):
-        """Agrega un proceso a la lista de procesos activos."""
-        self.processes.append(process)
-        self.processes.sort(key=lambda x:(x.arrival_time, -x.priority))
-
-    def delete_process(self, pid):
-        """Elimina un proceso de la lista de procesos activos."""
-        for proc in self.processes:
-            if proc.pid == pid:
-                self.processes.remove(proc)
-        for cpu in self.cpus:
-            cpu.delete_process(pid)
 
     def assign_processes(self, algorithm):
-        """Asigna procesos a las CPUs usando un algoritmo específico."""
+        #Asigna procesos a las CPUs usando un algoritmo específico.
         if algorithm == "fcfs":
             fcfs(self.processes, self.cpus)
         elif algorithm == "round_robin":
@@ -74,11 +172,12 @@ class ProcessManager:
             sjf(self.processes, self.cpus)
 
     def track_completed_processes(self):
-        """Rastrea los procesos completados en cada CPU."""
+        #Rastrea los procesos completados en cada CPU.
         for cpu in self.cpus:
             self.completed_processes.extend(cpu.completed_processes)
 
     def display_processes(self):
-        """Muestra información extendida de los procesos."""
+        #Muestra información extendida de los procesos.
         for proc in self.processes:
              proc.display_info()
+"""

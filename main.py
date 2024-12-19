@@ -1,3 +1,35 @@
+from app.process_manager import ProcessManager
+from app.core.Process import Process
+
+def main():
+    # Crear instancia de ProcessManager
+    process_manager = ProcessManager(num_processes=12)
+    
+    # Ejecutar la simulación
+    process_manager.simulate()
+
+    # Agregar un nuevo proceso
+    new_process = Process(
+        pid=100,
+        name="Process_100",
+        arrival_time=5,
+        service_time=10,
+        priority=3,
+        cpu=None,
+        memory=1024,
+        user="user",
+        status="READY"
+    )
+    process_manager.add_process(new_process)
+
+    # Reasignar procesos a las CPUs
+    process_manager.assign_processes()
+
+    # Eliminar un proceso por PID
+    process_manager.delete_process(100)
+
+if __name__ == "__main__":
+    main()
 
 
 # from app.process_manager import ProcessManager
@@ -120,5 +152,5 @@
 #     for cpu in cpus:
 #         cpu.execute_processes()
 #
-if __name__ == "__main__":
-    app.run(debug=True)
+#if __name__ == "__main__":
+#    app.run(debug=True)
