@@ -1,5 +1,28 @@
 $(document).ready(function() {
-    // Show the form when the button is clicked
+    
+    $('#get-real-processes-btn').click(function() {
+        $.ajax({
+            url: '/get_real_processes',
+            type: 'GET',
+            success: function(response) {
+                $('#processes-list').html(response);
+            }
+        });
+    });
+
+    $('#get-simulated-processes-btn').click(function() {
+        $.ajax({
+            url: '/get_simulated_processes',
+            type: 'GET',
+            success: function(response) {
+                $('#processes-list').html(response);
+            }
+        });
+    });
+
+    
+
+    
     $('#add-process-btn').click(function() {
         $('#add-process-form').toggle();
     });
@@ -51,3 +74,26 @@ $(document).ready(function() {
         });
     });
 });
+
+
+// Get references to the button, popup, and close button
+const deleteProcessBtn = document.getElementById("delete-process-btn");
+const deletePopupForm = document.getElementById("delete-popup-form");
+const deleteCloseBtn = document.getElementById("delete-close-btn");
+
+// Show the popup when the button is clicked
+deleteProcessBtn.onclick = function() {
+    deletePopupForm.style.display = "flex";
+};
+
+// Close the popup when the close button is clicked
+deleteCloseBtn.onclick = function() {
+    deletePopupForm.style.display = "none";
+};
+
+// Close the popup if the user clicks outside the form area
+window.onclick = function(event) {
+    if (event.target === deletePopupForm) {
+        deletePopupForm.style.display = "none";
+    }
+};

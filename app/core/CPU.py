@@ -4,14 +4,18 @@ class CPU:
         self.cpu_id = cpu_id
         self.scheduler = scheduler  # Algoritmo de planificación (FIFO, Round Robin, etc.)
         self.process_queue = []  # Cola de procesos
+        self.summary = []  # Resumen de la ejecución de procesos
 
     def add_process(self, process):
         """Asigna un proceso a la CPU."""
         self.process_queue.append(process)
 
+    def get_processes(self):
+        return self.process_queue
+
     def execute(self):
         print(f"---- CPU {self.cpu_id}: {self.scheduler.__name__.replace('_', ' ')} ----")
-        self.scheduler.execute(self.process_queue)
+        self.summary = self.scheduler.execute(self.process_queue)
         # scheduled_processes = self.scheduler(self.process_queue) #Orden de procesos a ser ejecutados
         # for proc in scheduled_processes:
         #     print(proc)

@@ -5,5 +5,6 @@ class GlobalScheduler:
     def assign_processes(self, processes):
         # Distribuye procesos a CPUs (round-robin por ejemplo)
         for i, process in enumerate(processes):
+            process.status = "READY"
             cpu_index = i % len(self.cpus)
             self.cpus[cpu_index].add_process(process)

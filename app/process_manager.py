@@ -16,21 +16,30 @@ class ProcessManager:
         self.cpus = []
         self.global_scheduler = None
 
-    def generate_processes(self):
+    def generate_processes(self, num_processes=12):
         """Generar procesos aleatorios."""
+        self.num_processes = num_processes
         for i in range(self.num_processes):
+            _pid = self.get_next_pid()
             process = Process(
-                pid=i,
-                name=f"Process_{i}",
+                pid=_pid,
+                name=f"Process_{_pid}",
                 arrival_time=random.randint(0, 15),
                 service_time=random.randint(1, 20),
                 priority=random.randint(1, 10),
                 cpu=0,
                 memory=random.randint(512, 4096),
                 user="user",
-                status="READY"
+                status="INDEFINIDO"
             )
             self.processes.append(process)
+    
+    def get_processes(self):
+        """Obtener la lista de procesos."""
+        return self.processes
+    
+    def get_next_pid(self):
+        return self.processes[-1].pid + 1 if self.processes else 0
 
     def get_real_processes(self):
         #Obtains a list of active system processes with extended information.
@@ -45,7 +54,7 @@ class ProcessManager:
                     'cpu': proc.cpu_percent(interval=None),   # CPU usage percentage (needs an interval)
                     'memory': proc.info['memory_percent'],   # Memory usage percentage
                     'user': proc.info['username'],           # Username running the process
-                    'status': 'stopped'          # Process status (running, sleeping, etc.)
+                    'status': 'INDEFINIDO'          # Process status (running, sleeping, etc.)
                 }
                 # Create a Process object
                 process = Process.from_proc_info(process_info)
@@ -53,16 +62,34 @@ class ProcessManager:
             except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
                 pass  # Ignore processes that are inaccessible or no longer exist
             cont += 1
+        self.num_processes = len(self.processes)
 
 
-    def setup_cpus(self):
-        """Configurar CPUs con diferentes algoritmos de planificación."""
-        self.cpus = [
+    def setup_cpus(self, cpu_algorithms):
+        """Configurar CPUs con diferentes algoritmos de planificación personalizados"""
+        
+        self.cpus = []
+        for cpu_id, algorithm in enumerate(cpu_algorithms):
+            if algorithm == "fcfs":
+                scheduler = FCFS()
+            elif algorithm == "round_robin":
+                scheduler = RoundRobin(quantum=4)
+            elif algorithm == "sjf":
+                scheduler = SJF()
+            elif algorithm == "priority":
+                scheduler = Priority()
+            else:
+                raise ValueError(f"Algoritmo {algorithm} no reconocido para la CPU {cpu_id}")
+
+            print(f"CPU {cpu_id}: {algorithm}")
+            self.cpus.append(CPU(cpu_id=cpu_id, scheduler=scheduler))
+        
+        """self.cpus = [
             CPU(cpu_id=0, scheduler=FCFS()),
             CPU(cpu_id=1, scheduler=RoundRobin(quantum=4)),
             CPU(cpu_id=2, scheduler=SJF()),
             CPU(cpu_id=3, scheduler=Priority())
-        ]
+        ]"""
 
     def assign_processes(self):
         """Asignar procesos a CPUs usando el planificador global."""
@@ -92,6 +119,7 @@ class ProcessManager:
     
     def add_process(self, process):
         """Agregar un nuevo proceso al sistema."""
+        process.display_info()
         self.processes.append(process)
         print(f"Proceso {process.name} agregado correctamente.")
 

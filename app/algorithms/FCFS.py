@@ -45,3 +45,20 @@ class FCFS:
             print(f"{proc.pid}\t\t\t\t{proc.arrival_time}\t\t{proc.service_time}\t\t{proc.waiting_time}\t\t{proc.turnaround_time}\t\t{proc.response_time}")
         
         print("\nAll processes have been executed.\n")
+
+        # Prepare a summary to return
+        summary = []
+        for proc in processes:
+            summary.append({
+                "pid": proc.pid,
+                "name": proc.name,
+                "arrival_time": proc.arrival_time,
+                "service_time": proc.service_time,
+                "start_time": proc.start_time,
+                "end_time": proc.end_time,
+                "waiting_time": proc.waiting_time,
+                "turnaround_time": proc.turnaround_time,
+                "response_time": proc.response_time,
+            })
+
+        return summary

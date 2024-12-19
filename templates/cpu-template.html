@@ -1,10 +1,19 @@
 <div class="cpu-column">
     <h3>CPU {{ cpu.cpu_id }}</h3>
 
-    {% for section, title in [("ready_processes", "Ready Processes"), 
-                              ("running_processes", "Running Processes"), 
-                              ("completed_processes", "Completed Processes"), 
-                              ("errored_processes", "Errored Processes")] %}
+    <!-- Selección de Algoritmo para la CPU -->
+    <div class="mb-3">
+        <label for="algorithm_cpu_{{ cpu.cpu_id }}" class="form-label">Seleccionar Algoritmo:</label>
+        <select name="algorithm_cpu_{{ cpu.cpu_id }}" id="algorithm_cpu_{{ cpu.cpu_id }}" class="form-select">
+            <option value="fcfs" {% if cpu.scheduler.__class__.__name__ == 'FCFS' %}selected{% endif %}>First Come First Serve (FCFS)</option>
+            <option value="round_robin" {% if cpu.scheduler.__class__.__name__ == 'RoundRobin' %}selected{% endif %}>Round Robin</option>
+            <option value="sjf" {% if cpu.scheduler.__class__.__name__ == 'SJF' %}selected{% endif %}>Shortest Job First (SJF)</option>
+            <option value="priority" {% if cpu.scheduler.__class__.__name__ == 'Priority' %}selected{% endif %}>Priority Scheduling</option>
+        </select>
+    </div>
+
+    {% for section, title in [("process_queue", "Ready Processes"), 
+                              ("summary", "Summary"), 
     <div class="process-section">
         <h4>{{ title }}</h4>
         <table>

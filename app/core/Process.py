@@ -12,7 +12,7 @@ class Process:
         self.service_time = service_time
         self.priority = priority
         self.start_time = None
-        self.waiting_time = None 
+        self.waiting_time = 0
         self.turnaround_time = None
         self.response_time = None
         self.remaining_time = service_time  # Nuevo atributo para tiempo restante
